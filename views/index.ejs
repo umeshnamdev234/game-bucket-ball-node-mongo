@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucket and Ball Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: inline-block;
+            width: 121px;
+            margin-bottom: 10px;
+            text-align: start;
+        }
+
+        input {
+            width: calc(100% - 120px);
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        /* Media Query for Mobile Devices */
+        @media only screen and (max-width: 600px) {
+            form {
+                max-width: 100%;
+            }
+
+            label {
+                width: 100%;
+                text-align: left;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Media Query for Responsive Table */
+        @media only screen and (max-width: 600px) {
+
+            th,
+            td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            th {
+                text-align: center;
+            }
+
+            td {
+                text-align: left;
+                border-bottom: none;
+            }
+        }
+
+        .parallel-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .content-box {
+            flex: 1;
+            margin-right: 20px;
+            /* Adjust margin as needed */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .table-wrapper {
+            max-height: 400px;
+            /* Set the fixed height for the wrapper */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background-color: #4CAF50;
+            color: white;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallel-container">
+        <div class="content-box">
+            <form id="bucketForm">
+                <h2>Create Bucket</h2>
+                <label for="bucketCapacity">Bucket Name:</label>
+                <input type="text" id="bucketName" name="bucketName" required>
+                <label for="bucketCapacity">Bucket Capacity:</label>
+                <input type="number" id="bucketCapacity" name="bucketCapacity" required>
+                <button type="button" onclick="createBucket()">Create Bucket</button>
+                <div id="bucketFormResult"></div>
+            </form>
+
+            <h2>Bucket List</h2>
+            <div class="table-wrapper">
+                <table class="bucket_list">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Capacity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="content-box">
+            <form id="ballForm">
+                <h2>Create Ball</h2>
+                <label for="ballColor">Ball Color:</label>
+                <input type="text" id="ballColor" name="ballColor" required>
+                <label for="ballSize">Ball Size:</label>
+                <input type="text" id="ballSize" name="ballSize" required>
+                <button type="button" onclick="createBall()">Create Ball</button>
+                <div id="ballFormResult"></div>
+            </form>
+            <h2>Ball List</h2>
+            <div class="table-wrapper">
+                <table class="ball_list ">
+                    <thead>
+                        <tr style="width: 500px;">
+                            <th>Color</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="content-box">
+            <h2>Bucket Suggestion</h2>
+            <form id="bucketSuggestionForm">
+                
+            </form>
+            <button type="button" onclick="suggestBuckets()">Suggest Buckets</button>
+            </br>
+            </br>
+            <div id="bucketSuggestionFormResult"></div>
+            <h2>Bucket Suggestion Result</h2>
+            <table class="bucketSuggestionResult">
+                <thead>
+                    <tr>
+                        <th>Bucket</th>
+                        <th>Content</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Add more content boxes as needed -->
+    </div>
+    <script>
+        function createBucket() {
+            document.getElementById('bucketFormResult').innerText = '';
+            const bucketName = document.getElementById('bucketName').value;
+            const bucketCapacity = document.getElementById('bucketCapacity').value;
+            if (bucketName === "" || bucketCapacity === "") {
+                document.getElementById('bucketFormResult').innerText = 'All fields are required';
+                return false;
+            }
+            const data = {
+                name: bucketName,
+                capacity: bucketCapacity
+            };
+
+            fetch('/createBucket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                    if(responseData.error){
+                        document.getElementById('bucketFormResult').innerText = responseData.error;
+                        return false;
+                    }
+                    getBucketData();
+                    document.getElementById('bucketName').value = "";
+                    document.getElementById('bucketCapacity').value = "";
+                    document.getElementById('bucketFormResult').innerText = 'Bucket created!';
+                })
+                .catch(error => console.error('Error posting data:', error));
+        }
+
+        function createBall() {
+            document.getElementById('ballFormResult').innerText = '';
+            const color = document.getElementById('ballColor').value;
+            const size = document.getElementById('ballSize').value;
+            if (color === "" || size === "") {
+                document.getElementById('ballFormResult').innerText = 'All fields are required';
+                return false;
+            }
+            const data = {
+                color,
+                size
+            };
+
+            fetch('/createBall', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                    if(responseData.error){
+                        document.getElementById('ballFormResult').innerText = responseData.error;
+                        return false;
+                    }
+                    getBallData();
+                    document.getElementById('ballColor').value = "";
+                    document.getElementById('ballSize').value = "";
+                    document.getElementById('ballFormResult').innerText = 'Ball created!';
+                })
+                .catch(error => console.error('Error posting data:', error));
+        }
+
+        function suggestBuckets() {
+            const form = document.getElementById('bucketSuggestionForm');
+            const formValues = [];
+            for (const element of form.elements) {
+                if (element.name && element.value !== "" ) {
+                    formValues.push({
+                        color : element.name,
+                        count : element.value,
+                        size : element.size
+                    })
+                }
+            }
+            if(formValues.length < 1){
+                document.getElementById('bucketSuggestionFormResult').innerText = 'Please enter balls to put into the bucket. ';
+                return false;
+            }
+            const data = {
+                suggestions: formValues
+            }
+            fetch('/suggestBuckets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            }).then(response => response.json()).then(data => {
+                    const tableBody = document.querySelector('.bucketSuggestionResult tbody');
+                    if(data.error){
+                        document.getElementById('bucketSuggestionFormResult').innerText = data.error;
+                        while (tableBody.firstChild) {
+                            tableBody.removeChild(tableBody.firstChild);
+                        }
+                        return false;
+                    }
+                    // Clear existing table rows
+                    tableBody.innerHTML = '';
+                    data.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${item.name}</td><td>${item.contents.join(', ')}</td>`;
+                        tableBody.appendChild(row);
+                    });
+                    document.getElementById('bucketSuggestionFormResult').innerText = 'Bucket suggestion generated!';
+            }).catch(error => console.error('Error fetching data:', error));
+        }
+
+        function getBucketData() {
+            fetch('/bucket_list')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('.bucket_list tbody');
+                    // Clear existing table rows
+                    tableBody.innerHTML = '';
+
+                    data.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${item.name}</td><td>${item.capacity}</td>`;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function getBallData() {
+            fetch('/ball_list')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('.ball_list tbody');
+                    // Clear existing table rows
+                    tableBody.innerHTML = '';
+                    data.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${item.color}</td><td>${item.size}</td>`;
+                        tableBody.appendChild(row);
+                    });
+
+                    const allColorBalls = [...new Set(data.filter(item => item.color !== '' && item.color !== null).map(item =>  [item.color, item.size] ))];
+                    const suggestionForm = document.getElementById('bucketSuggestionForm');
+                    // Remove previous child nodes of the form
+                    while (suggestionForm.firstChild) {
+                        suggestionForm.removeChild(suggestionForm.firstChild);
+                    }
+                    allColorBalls.forEach(([color, size]) => {
+                        const label = document.createElement('label');
+                        label.textContent = color;
+
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.name = color; 
+                        input.size = size; 
+                        // Append label and input to the form
+                        suggestionForm.appendChild(label);
+                        suggestionForm.appendChild(input);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+        getBucketData();
+        getBallData();
+    </script>
+</body>
+
+</html>

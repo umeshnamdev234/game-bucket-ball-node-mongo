@@ -1,0 +1,112 @@
+{
+    "collection": {
+        "info": {
+            "_postman_id": "d270720d-074f-409a-a1d2-8b43d9044b43",
+            "name": "bucketBallDB",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "updatedAt": "2023-12-07T09:48:09.000Z",
+            "uid": "12790713-d270720d-074f-409a-a1d2-8b43d9044b43"
+        },
+        "item": [
+            {
+                "name": "CreateBall",
+                "id": "d18c7708-939d-4ab0-8b82-b3966c96eb65",
+                "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                },
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n   \"color\" : \"Pink\",\n   \"size\" : 2\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "url": {
+                        "raw": "http://localhost:3000/createBall",
+                        "protocol": "http",
+                        "host": [
+                            "localhost"
+                        ],
+                        "port": "3000",
+                        "path": [
+                            "createBall"
+                        ]
+                    }
+                },
+                "response": [],
+                "uid": "12790713-d18c7708-939d-4ab0-8b82-b3966c96eb65"
+            },
+            {
+                "name": "SuggestBucket",
+                "id": "fb437424-243f-49d7-a8a8-b0da30b17197",
+                "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                },
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n   \"suggestions\" : [{ \"color\": \"Red\", \"count\": 2 }, { \"color\": \"Blue\", \"count\": 6 }, { \"color\": \"Green\", \"count\": 8 }]\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "url": {
+                        "raw": "http://localhost:3000/suggestBuckets",
+                        "protocol": "http",
+                        "host": [
+                            "localhost"
+                        ],
+                        "port": "3000",
+                        "path": [
+                            "suggestBuckets"
+                        ]
+                    }
+                },
+                "response": [],
+                "uid": "12790713-fb437424-243f-49d7-a8a8-b0da30b17197"
+            },
+            {
+                "name": "CreateBucket",
+                "id": "d9a12ad7-7495-461f-b001-f88505d0d528",
+                "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                },
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n   \"capacity\" : 40\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "url": {
+                        "raw": "http://localhost:3000/createBucket",
+                        "protocol": "http",
+                        "host": [
+                            "localhost"
+                        ],
+                        "port": "3000",
+                        "path": [
+                            "createBucket"
+                        ]
+                    }
+                },
+                "response": [],
+                "uid": "12790713-d9a12ad7-7495-461f-b001-f88505d0d528"
+            }
+        ]
+    }
+}
