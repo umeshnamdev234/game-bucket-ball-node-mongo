@@ -19,7 +19,7 @@ Sure, here's a draft for your GitHub repository description:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/bucket-ball-allocator.git
+   Git clone https://github.com/umeshnamdev234/game-bucket-ball-node-mongo.git
    cd bucket-ball-allocator
    ```
 
